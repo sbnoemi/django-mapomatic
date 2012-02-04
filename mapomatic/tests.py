@@ -13,3 +13,13 @@ class TemplateTestCase(unittest.TestCase):
         c = Context({})
         str = t.render(c)
         self.assertTrue(u'<div id="map">' in str)
+        
+    def test_base_html(self):
+        """ Test that base.html pulls in the Google Maps and jQuery scripts, and 
+        our custom JS.  This needs to change when we move our JS to an external file."""
+        t = loader.get_template('base.html')
+        c = Context({})
+        str = t.render(c)
+        self.assertTrue(u'http://maps.google.com/maps/api/js' in str)
+        self.assertTrue(u'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js' in str)
+        self.assertTrue(u"map = new google.maps.Map(document.getElementById('map')" in str)
