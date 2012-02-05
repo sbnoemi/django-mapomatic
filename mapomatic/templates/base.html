@@ -1,48 +1,11 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" language="javascript"></script>
-		<script language="javascript">
-			(function($) {
-					var map, markers = {}, map_points = new Array();
-					
-					// If we have any map points, they're output here:
-					{% for point in map_points %}
-						map_points.push({
-							id: {{ point.id }},
-							name: "{{ point.name }}",
-							lat: {{ point.location.y }},
-							lng: {{ point.location.x }}
-						});
-					{% endfor %}
-					alert(map_points[0].id);
-					
-					var initialize_map = function() {
-						map = new google.maps.Map(document.getElementById('map'), {
-							zoom: 5,
-							// @TODO: Pass center to template
-							center: new google.maps.LatLng(41.879535, -74.624333),
-							mapTypeId: google.maps.MapTypeId.ROADMAP
-						});
-					}
-					
-					var display_map_points = function() {
-						for(var i = 0; i < map_points.length; i++) {
-							var point = map_points[i];
-							var pos = new google.maps.LatLng(point.lat, point.lng);
-							var marker = new google.maps.Marker({map: map, position: pos});
-							markers[point.id] = marker;
-						}
-					}
-					
-					$(document).ready(function() {
-						initialize_map();
-						display_map_points();
-					});
-
-			})(jQuery);
-		</script>
+		{% block external_javascript %}
+					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" language="javascript"></script>
+		{% endblock external_javascript %}
+		{% block map_point_js_defs %}
+		{% endblock map_point_js_defs %}
 		<style>
 			body {font-family: sans-serif}
 			#map {width: 500px; height: 300px}
@@ -50,6 +13,11 @@
 	</head>
 	<body>
 		{% block content %}
+			<h1>Hi world</h1>
+			{% block point_list %}
+			{% endblock %}
+			{% block map %}
+			{% endblock %}
 		{% endblock content %}
 	</body>
 </html>
