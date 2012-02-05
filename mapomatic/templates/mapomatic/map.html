@@ -1,7 +1,66 @@
 {% extends 'base.html' %}
 
-{% block content %}
-		<h1>Hi world</h1>
-		<div id="map">
-		</div>
-{% endblock content %}
+{% block external_javascript %}
+	{{ block.super }}
+		<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script language="javascript">
+			(function($) {
+					var map, markers = {};
+										
+					var initialize_map = function() {
+						map = new google.maps.Map(document.getElementById('map'), {
+							zoom: 5,
+							// @TODO: Pass center to template
+							center: new google.maps.LatLng(41.879535, -74.624333),
+							mapTypeId: google.maps.MapTypeId.ROADMAP
+						});
+					}
+					
+					var display_map_points = function() {
+						for(var i = 0; i < map_points.length; i++) {
+							var point = map_points[i];
+							var pos = new google.maps.LatLng(point.lat, point.lng);
+							var marker = new google.maps.Marker({map: map, position: pos});
+							markers[point.id] = marker;
+						}
+					}
+					
+					$(document).ready(function() {
+						initialize_map();
+						display_map_points();
+					});
+
+			})(jQuery);
+		</script>
+{% endblock external_javascript %}
+
+{% block map_point_js_defs %}
+		<script language="javascript">
+			
+			var map_points = new Array();
+			
+			// If we have any map points, they're output here:
+			{% for point in map_points %}
+				map_points.push({
+					id: {{ point.id }},
+					name: "{{ point.name }}",
+					lat: {{ point.location.y }},
+					lng: {{ point.location.x }}
+				});
+			{% endfor %}
+			
+		</script>
+{% endblock %}
+
+{% block map %}
+				<div id="map">
+				</div>
+{% endblock map %}
+
+{% block point_list %}
+				<ul id="map_point_list">
+					{% for point in map_points %}
+						<li><a id="map_point_{{point.id}}">{{ point.name }}</a></li>
+					{% endfor %}
+				</ul>
+{% endblock point_list %}
