@@ -13,12 +13,13 @@ class TemplateTestCase(unittest.TestCase):
         t = loader.get_template('mapomatic/map.html')
         c = Context({})
         str = t.render(c)
+        self.assertTrue(u'Hi world' in str)
         self.assertTrue(u'<div id="map">' in str)
         
     def test_base_html(self):
-        """ Test that base.html pulls in the Google Maps and jQuery scripts, and 
+        """ Test that map.html pulls in the Google Maps and jQuery scripts, and 
         our custom JS.  This needs to change when we move our JS to an external file."""
-        t = loader.get_template('base.html')
+        t = loader.get_template('mapomatic/map.html')
         c = Context({})
         str = t.render(c)
         self.assertTrue(u'http://maps.google.com/maps/api/js' in str)
@@ -28,7 +29,7 @@ class TemplateTestCase(unittest.TestCase):
     def test_map_point_js_output(self):
         """ Test that our javascript is outputting the map_points array definition in 
         javascript correctly."""
-        t = loader.get_template('base.html')
+        t = loader.get_template('mapomatic/map.html')
         c = Context({'map_points': MapPoint.objects.all()})
         str = t.render(c)
         self.assertRegexpMatches(str, r'map_points\.push\(\{\s*id:\s*\d+\s*,\s+name:\s*"NYC"\s*,\s+'
